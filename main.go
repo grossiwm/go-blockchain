@@ -1,11 +1,11 @@
 package main
 
 import (
+	// "fmt"
 	"log"
-	"gopherchain/blockchain"	
+	// "gopherchain/blockchain"
+	"gopherchain/blockchain"
 )
-
-
 
 func init() {
 	log.SetPrefix("Blockchain: ")
@@ -13,8 +13,8 @@ func init() {
 
 func main() {
 	blockchain := blockchain.NewBlockchain()
-	blockchain.BuildBlock(7, "1")
-	blockchain.BuildBlock(9, "2")
-	blockchain.BuildBlock(12, "3")
+	blockchain.BuildBlock(5)
+	blockchain.BuildBlock(3)
+	blockchain.BuildBlock(1)
 	blockchain.Print()
 }

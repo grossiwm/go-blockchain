@@ -1,32 +1,43 @@
 package blockchain
 
 import (
-	block "gopherchain/block"
+	"gopherchain/block"
+	"gopherchain/chain"
 	"strings"
 	"fmt"
 )
 
 type Blockchain struct {
 	transactionPool []string
-	chain []*block.Block
+	chain chain.Chain
 }
 
 func NewBlockchain() *Blockchain {
+	
 	blockchain := new(Blockchain)
-	blockchain.BuildBlock(0, "Genesis")
+	blockchain.BuildFirstBlock(0)
 	return blockchain
 }
 
-func (blockchain *Blockchain) BuildBlock(nonce int, previousHash string) *block.Block {
-	block := block.NewBlock(nonce, previousHash)
-	blockchain.chain = append(blockchain.chain, block)
+func (blockchain *Blockchain) BuildBlock(nonce int) *block.Block {
+
+	lastBlock := blockchain.chain.Peek()
+	block := block.NewBlock(nonce, lastBlock.Hash())
+	blockchain.chain.Add(block)
+	return block
+}
+
+func (blockchain *Blockchain) BuildFirstBlock(nonce int) *block.Block {
+	genesisBlock := &block.Block{}
+	block := block.NewBlock(nonce, genesisBlock.Hash())
+	blockchain.chain.Add(block)
 	return block
 }
 
 func (blockchain *Blockchain) Print() {
-	for i, block := range blockchain.chain {
-		fmt.Printf("%s Block %d  %s\n",strings.Repeat("$", 15), i, strings.Repeat("$", 15))
+	for i, block := range blockchain.chain.Blocks() {
+		fmt.Printf("%s Block %d  %s\n",strings.Repeat("$", 50), i, strings.Repeat("$", 50))
 		block.Print()
 	}
-	fmt.Printf("%s", strings.Repeat("#", 50))
+	fmt.Printf("%s", strings.Repeat("#", 110))
 }
