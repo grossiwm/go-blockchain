@@ -23,6 +23,18 @@ func (transaction *Transaction) Print() {
 	fmt.Printf(" value	%.4f\n", transaction.value)
 }
 
+func (t *Transaction) GetSenderAddress() string {
+	return t.senderAddress
+}
+
+func (t *Transaction) GetRecipientAddress() string {
+	return t.recipientAddress
+}
+
+func (t *Transaction) GetValue() float32 {
+	return t.value
+}
+
 func (t *Transaction) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct {
 		SenderAdress     string  `json:"senderAdress"`
