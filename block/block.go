@@ -5,13 +5,14 @@ import (
 	"time"
 	"encoding/json"
 	"crypto/sha256"
+	"gopherchain/transaction"
 )
 
 type Block struct {
 	nonce int
 	previousHash [32]byte
 	timestamp int64
-	transactions []string
+	transactions []*transaction.Transaction
 }
 
 func (block *Block) MarshalJSON() ([]byte, error) {
@@ -19,7 +20,7 @@ func (block *Block) MarshalJSON() ([]byte, error) {
 		Timestamp int64 `json:"timestamp"`
 		Nonce int `json:"nonce"`
 		PreviousHash [32]byte `json:"previousHash"`
-		Transactions []string `json:"transactions"`
+		Transactions []*transaction.Transaction `json:"transactions"`
 	}
 
 	return json.Marshal(&B {
@@ -30,11 +31,12 @@ func (block *Block) MarshalJSON() ([]byte, error) {
 	})
 }
 
-func NewBlock(nonce int, previousHash [32]byte) *Block {
+func NewBlock(nonce int, previousHash [32]byte, transactions []*transaction.Transaction) *Block {
 	block := new(Block)
 	block.timestamp = time.Now().Unix()
 	block.nonce = nonce
 	block.previousHash = previousHash
+	block.transactions = transactions
 	return block
 }
 
@@ -42,7 +44,9 @@ func (block *Block) Print() {
 	fmt.Printf("timestamp	%d\n", block.timestamp)
 	fmt.Printf("nonce		%d\n", block.nonce)
 	fmt.Printf("previousHash	%x\n", block.previousHash)
-	fmt.Printf("transactions	%s\n", block.transactions)
+	for _, t := range block.transactions {
+		t.Print()
+	}
 }
 
 func (block *Block) Hash() [32]byte {

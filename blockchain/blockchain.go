@@ -3,12 +3,13 @@ package blockchain
 import (
 	"gopherchain/block"
 	"gopherchain/chain"
+	"gopherchain/transaction"
 	"strings"
 	"fmt"
 )
 
 type Blockchain struct {
-	transactionPool []string
+	transactionPool []*transaction.Transaction
 	chain chain.Chain
 }
 
@@ -22,16 +23,22 @@ func NewBlockchain() *Blockchain {
 func (blockchain *Blockchain) BuildBlock(nonce int) *block.Block {
 
 	lastBlock := blockchain.chain.Peek()
-	block := block.NewBlock(nonce, lastBlock.Hash())
+	block := block.NewBlock(nonce, lastBlock.Hash(), blockchain.transactionPool)
+	blockchain.transactionPool = []*transaction.Transaction{}
 	blockchain.chain.Add(block)
 	return block
 }
 
 func (blockchain *Blockchain) BuildFirstBlock(nonce int) *block.Block {
 	genesisBlock := &block.Block{}
-	block := block.NewBlock(nonce, genesisBlock.Hash())
+	block := block.NewBlock(nonce, genesisBlock.Hash(), blockchain.transactionPool)
 	blockchain.chain.Add(block)
 	return block
+}
+
+func (blockchain *Blockchain) AddTransaction (sender string, recipient string, value float32) {
+	transaction := transaction.NewTransaction(sender, recipient, value)
+	blockchain.transactionPool = append(blockchain.transactionPool, transaction)
 }
 
 func (blockchain *Blockchain) Print() {

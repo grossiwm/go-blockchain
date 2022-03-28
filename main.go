@@ -13,8 +13,9 @@ func init() {
 
 func main() {
 	blockchain := blockchain.NewBlockchain()
+	blockchain.BuildFirstBlock(1)
+	blockchain.AddTransaction("X", "Y", 25.0989)
+	blockchain.AddTransaction("C", "O", 1.0989)
 	blockchain.BuildBlock(5)
-	blockchain.BuildBlock(3)
-	blockchain.BuildBlock(1)
 	blockchain.Print()
 }
